@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Waits until remote DB is ready
 function waitForConnection()

@@ -1,13 +1,8 @@
-FROM php:7.2-cli
+FROM php:7.2-cli-alpine3.12
 
-RUN apt-get update && \
-    apt-get install -y \
-    netcat \
-    libsqlite3-dev \
-    libpq-dev \
-    zlib1g-dev
-
-RUN docker-php-ext-install \
+RUN apk update --no-cache && \
+    apk add composer zlib-dev postgresql-dev sqlite-dev && \
+    docker-php-ext-install -j$(nproc) \
     mbstring \
     bcmath \
     zip \
@@ -15,12 +10,6 @@ RUN docker-php-ext-install \
     pdo_mysql \
     pdo_pgsql \
     pdo_sqlite
-
-# Install composer
-ENV COMPOSER_HOME /composer
-ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
-ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
 
 COPY . /usr/src/lumen
 WORKDIR /usr/src/lumen
